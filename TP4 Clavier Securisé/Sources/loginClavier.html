@@ -35,6 +35,7 @@
 			
 			//A FAIRE >>>>>>>>>>>	Quelques fonctions à écrire
 			function init(){
+				remplirClavierNum()
 				// console.log("coucou")
 				//Spécifier les valeurs des variables jquery suivantes (voir ci-dessus les explications).
 				allcases	= $("#clavier td")								
@@ -54,7 +55,20 @@
 					form.find('input[type="submit"]').on('click',soumettre)
 					//autoriser l'effacement des données du formulaire pour invoquer effacerCode (clic sur bouton <input type="reset">)
 					form.find('input[type="reset"]').on('click',effacerCode)
-					
+
+					// var inputElement = document.querySelector('input[name="code"]');
+				    // var previousValue = inputElement.value;
+
+				    // inputElement.addEventListener('input', function () {
+				    //     var currentValue = inputElement.value;
+
+				    //     if (previousValue.length > currentValue.length) {
+				    //         console.log("Un caractère a été effacé.");
+				    //     }
+
+				    //     // Mettez à jour la valeur précédente pour la prochaine comparaison
+				    //     previousValue = currentValue;
+				    // });					
 				
 				//Note pour le DST : l'initialisation clavier est faite statiquement dans les cellules de <table>
 				//  donc, ne pas faire la fonction remplirClavierNum();  
@@ -67,13 +81,16 @@
 				//la valeur de la touche du clavier couramment saisie.
 				//En tout, il ne peut y avoir plus de saises que maxTouches. 
 				// console.log($(this).text())
-				nbTouches++
-				vdef += $(this).text()
-				icode.attr('value',vdef)
+				if(nbTouches < maxTouches){
+					nbTouches++
+					vdef += $(this).text()
+					icode.attr('value',vdef)
+				}
 			}			
 			
 			//A FAIRE >>>>>>>>>>>	
 			function soumettre () {
+				event.preventDefault();
 				//soumission du formulaire par une requête jquery ajax ou équivalente
 				//Il ne peut y avoir plus de soumissions que maxTentatives. 
 				//La requete ne peut être soumise que si la taille du code est MaxChiffres.
@@ -87,6 +104,9 @@
 				//s.indexOf(i,s.length-1) extrait la fin de la chaîne s à partir de sa position i (i<s.length)
 				//Ne pas oublier d'effacer le code de la valeur de <input name="code">
 				//en invoquant la fonction effacerCode suivante.
+				if(nbTouches == 6){
+					console.log("coucou")
+				}
 			} 
 			
 			//A FAIRE >>>>>>>>>>> 
@@ -95,9 +115,9 @@
 				//affecte vdef comme valeur initiale de la balise <input name="code">
 				// ...
 			}
-			
 			//A FAIRE pour le DST : uniquement le point (1) cité.
-			function remplirClavierNum() {	
+			function remplirClavierNum() {
+
 				//(1)Elimine globalement la classe de style "activecase" 
 				// pour toutes les cellules <td> du clavier
 				//puis affecte 10 d'entre elles tirées aléatoirement 
@@ -110,8 +130,41 @@
 				//Note : tab.splice(c,1) enlève la case d'indice c du tableau tab
 				//Note : Math.round() arrondi à l'entier le plus prêt
 				//Note : Math.floor() tronque donnant l'entier proche inférieur 
+
+				// document.addEventListener("DOMContentLoaded", function() {
+				const modif = document.getElementById("clavier")
+				let tab = new Array(0,1,2,3,4,5,6,7,8,9,null,null,null,null,null,null)
+
+				const table = document.createElement("table");
+				table.setAttribute("id","clavier")
+				for (let i = 0; i < dimCarre; i++) {
+					const ligne = document.createElement("tr");
+					for (let j = 0; j < dimCarre; j++) {
+						const cellule = document.createElement("td");
+						cellule.classList.add("case");
+						let a = Math.floor(Math.random()*tab.length)
+						console.log(a)
+						if (tab[a] !== null) {
+							cellule.classList.add("activecase");
+							cellule.textContent = tab[a];
+						}
+						tab.splice(a,1)
+						ligne.appendChild(cellule);
+					}
+					table.appendChild(ligne);
+				}
+				modif.parentNode.replaceChild(table, modif)
+			// });
+				// console.log(tab)
+				// for(let i=0;i<9;++i){
+				// 	let a = Math.floor(Math.random()*tab.length)
+				// 	console.log(a)//
+				// 	tab.splice(a,1)
+				// 	console.log(tab)
+				// }
 			}
 
+			
 			
 		</script>
 <body>
